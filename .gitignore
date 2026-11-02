@@ -1,0 +1,5 @@
+# Holds flash dumps and nvram, including passwords and Wi-Fi keys.
+state/
+firmware/
+*.w
+__pycache__/
