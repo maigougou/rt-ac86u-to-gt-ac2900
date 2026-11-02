@@ -8,9 +8,14 @@ set -euo pipefail
 PROJECT=$1
 OUT=$2
 MERLIN_TAG=386.14_2
+# Upstream removed gcc 5.3 from am-toolchains in 2026-10, but this tree needs it.
+# This is the last commit before 386.14_2 was tagged.
+TOOLCHAIN_COMMIT=d1af80e6b6686a4edc680386c09a8361453dd5c1
 BUILD_USER=builder
-TOOLCHAIN=/opt/toolchains/crosstools-arm-gcc-5.3-linux-4.1-glibc-2.22-binutils-2.25
-TOOLCHAIN64=/opt/toolchains/crosstools-aarch64-gcc-5.3-linux-4.1-glibc-2.22-binutils-2.25
+TOOLCHAIN_NAME=crosstools-arm-gcc-5.3-linux-4.1-glibc-2.22-binutils-2.25
+TOOLCHAIN64_NAME=crosstools-aarch64-gcc-5.3-linux-4.1-glibc-2.22-binutils-2.25
+TOOLCHAIN=/opt/toolchains/$TOOLCHAIN_NAME
+TOOLCHAIN64=/opt/toolchains/$TOOLCHAIN64_NAME
 
 setup() {
 	dpkg --add-architecture i386
@@ -35,7 +40,9 @@ setup() {
 
 build() {
 	cd "$HOME"
-	git clone --depth 1 https://github.com/RMerl/am-toolchains
+	git clone --filter=blob:none --no-checkout https://github.com/RMerl/am-toolchains
+	git -C am-toolchains sparse-checkout set "brcm-arm-hnd/$TOOLCHAIN_NAME" "brcm-arm-hnd/$TOOLCHAIN64_NAME"
+	git -C am-toolchains checkout "$TOOLCHAIN_COMMIT"
 	git clone --depth 1 --branch "$MERLIN_TAG" https://github.com/RMerl/asuswrt-merlin.ng
 	python3 "$PROJECT/tools/merlin160.py" patch asuswrt-merlin.ng | tee "$OUT/report.txt"
 

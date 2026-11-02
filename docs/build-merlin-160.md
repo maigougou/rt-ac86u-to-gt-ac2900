@@ -34,7 +34,23 @@ docker run --rm -v "$PWD:/project:ro" -v "$PWD/out:/out" ubuntu:20.04 bash /proj
 
 这种方式下固件留在容器里，脚本结束后会被删除。要留下固件，请用下面的手动方式。
 
-**手动：** 先按 [Merlin 编译 Wiki](https://github.com/RMerl/asuswrt-merlin.ng/wiki/Compile-Firmware-from-source) 安装依赖、设置工具链，然后获取源码：
+**手动：** 先按 [Merlin 编译 Wiki](https://github.com/RMerl/asuswrt-merlin.ng/wiki/Compile-Firmware-from-source) 安装依赖和配置环境变量。
+
+但工具链不能照 Wiki 直接克隆：上游在 2026 年 10 月删除了这个版本需要的 gcc 5.3，用最新的 `am-toolchains` 会报 `could not find Toolchain`。改用删除前的提交：
+
+```bash
+cd ~ && git clone --filter=blob:none --no-checkout https://github.com/RMerl/am-toolchains
+```
+
+```bash
+git -C ~/am-toolchains sparse-checkout set brcm-arm-hnd/crosstools-arm-gcc-5.3-linux-4.1-glibc-2.22-binutils-2.25 brcm-arm-hnd/crosstools-aarch64-gcc-5.3-linux-4.1-glibc-2.22-binutils-2.25
+```
+
+```bash
+git -C ~/am-toolchains checkout d1af80e6b6686a4edc680386c09a8361453dd5c1
+```
+
+然后获取源码：
 
 ```bash
 cd ~ && git clone --depth 1 --branch 386.14_2 https://github.com/RMerl/asuswrt-merlin.ng
