@@ -39,11 +39,7 @@ docker run --rm -v "$PWD:/project:ro" -v "$PWD/out:/out" ubuntu:20.04 bash /proj
 但工具链不能照 Wiki 直接克隆：上游在 2026 年 10 月删除了这个版本需要的 gcc 5.3，用最新的 `am-toolchains` 会报 `could not find Toolchain`。改用删除前的提交：
 
 ```bash
-cd ~ && git clone --filter=blob:none --no-checkout https://github.com/RMerl/am-toolchains
-```
-
-```bash
-git -C ~/am-toolchains sparse-checkout set brcm-arm-hnd/crosstools-arm-gcc-5.3-linux-4.1-glibc-2.22-binutils-2.25 brcm-arm-hnd/crosstools-aarch64-gcc-5.3-linux-4.1-glibc-2.22-binutils-2.25
+cd ~ && git clone https://github.com/RMerl/am-toolchains
 ```
 
 ```bash

@@ -41,7 +41,10 @@ setup() {
 build() {
 	cd "$HOME"
 	git clone --filter=blob:none --no-checkout https://github.com/RMerl/am-toolchains
-	git -C am-toolchains sparse-checkout set "brcm-arm-hnd/$TOOLCHAIN_NAME" "brcm-arm-hnd/$TOOLCHAIN64_NAME"
+	# Not "git sparse-checkout set": focal's git refuses it because master no
+	# longer has these directories.
+	git -C am-toolchains config core.sparseCheckout true
+	printf '/brcm-arm-hnd/%s/\n' "$TOOLCHAIN_NAME" "$TOOLCHAIN64_NAME" > am-toolchains/.git/info/sparse-checkout
 	git -C am-toolchains checkout "$TOOLCHAIN_COMMIT"
 	git clone --depth 1 --branch "$MERLIN_TAG" https://github.com/RMerl/asuswrt-merlin.ng
 	python3 "$PROJECT/tools/merlin160.py" patch asuswrt-merlin.ng | tee "$OUT/report.txt"
