@@ -31,6 +31,7 @@
 | `skip_crc` 跨型号刷入 | **未验证**，只确认了校验会放行 |
 | Merlin GT 镜像 | **未分析**，下载源对分析环境返回 403 |
 | 刷机后的 Wi-Fi、LED 和稳定性 | **未验证** |
+| 保持 RT 型号的 160 MHz 固件 | 补丁已在 386.14_2 的真实文件上测试；编译结果待 CI 确认；**未上机** |
 
 ### 需要真机测试
 
@@ -102,6 +103,12 @@
 3. **串口。** 主板有 4 针 UART，可以进 CFE 命令行看报错。**不要轻易使用 `w` 命令**，它会写整片闪存。
 4. **Wi-Fi 校准或 MAC 丢失。** 从备份恢复 `misc1`/`misc2`。这一步风险高，先核对 `state/backup/proc_mtd.txt` 的分区号，并阅读 [JackMerlin 的 HND 指南](https://github.com/JackMerlin/How-to-flash-the-CFE-of-RT-AC86U-and-other-HND-routers/blob/main/README-zh_CN.md)。
 
+## 不改型号开启 160 MHz
+
+官方 RT 固件的 Wi-Fi 法规数据里没有 160 MHz 表，这才是 RT-AC86U 没有 160 MHz 选项的直接原因。可以保持 RT-AC86U 型号，自己编译一个带 160 MHz 表的 Merlin 386.14_2，这样 LED 和按键都不受影响。步骤和风险见 [编译教程](docs/build-merlin-160.md)。
+
+本仓库不提供编译好的固件，这条路线同样**没有真机验证**。
+
 ## 工具
 
 需要 Python 3.8+ 和 OpenSSH 客户端，没有第三方依赖。
@@ -111,6 +118,7 @@
 | [tools/fwtool.py](tools/fwtool.py) | 离线解析和校验 `.w` 镜像（`info` / `verify` / `compare`） | 不会 |
 | [tools/router-check.sh](tools/router-check.sh) | 路由器端健康报告 | 不会 |
 | [tools/ac86u2gt.py](tools/ac86u2gt.py) | 流程工具（见下表） | 只有 `arm` 和 `disarm` |
+| [tools/merlin160.py](tools/merlin160.py) | 给 Merlin 源码打 160 MHz 补丁，并检查编译结果 | 不会 |
 
 | 命令 | 作用 |
 |---|---|

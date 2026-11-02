@@ -27,3 +27,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: shellcheck -s sh tools/router-check.sh
+      - run: shellcheck tools/build-merlin-160.sh

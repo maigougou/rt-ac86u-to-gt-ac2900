@@ -1,0 +1,37 @@
+name: build-merlin-160
+
+# Takes hours, so it only runs when its own inputs change or on request.
+on:
+  workflow_dispatch:
+  push:
+    branches: [merlin-160]
+    paths:
+      - tools/merlin160.py
+      - tools/build-merlin-160.sh
+      - .github/workflows/build-merlin-160.yml
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache
+          df -h /
+      - name: Build and check
+        run: |
+          mkdir -p out
+          docker run --rm -v "$PWD:/project:ro" -v "$PWD/out:/out" ubuntu:20.04 \
+            bash /project/tools/build-merlin-160.sh /project /out
+      - name: Upload report and log
+        if: always()
+        # Log and report only. This repository does not distribute firmware.
+        uses: actions/upload-artifact@v4
+        with:
+          name: merlin-160-report
+          path: |
+            out/report.txt
+            out/build.log.gz
+          retention-days: 30
