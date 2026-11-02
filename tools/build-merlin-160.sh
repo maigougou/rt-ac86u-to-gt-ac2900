@@ -74,7 +74,7 @@ build() {
 check_image() {
 	cd "$HOME/asuswrt-merlin.ng/release"
 	local image
-	image=$(find . -path '*/image/*_ubi.w' ! -name '*cferom*' ! -name '*pureubi*' | head -n 1)
+	image=$(find src-rt-5.02hnd/targets/94908HND -maxdepth 1 -name '*_ubi.w' ! -name '*cferom*' ! -name '*pureubi*' | head -n 1)
 	if [ -z "$image" ]; then
 		echo "FAIL no *_ubi.w image found" | tee -a "$OUT/report.txt"
 		return 1

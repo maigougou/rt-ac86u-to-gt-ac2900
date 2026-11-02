@@ -64,7 +64,7 @@ python3 /path/to/this/project/tools/merlin160.py patch ~/asuswrt-merlin.ng
 cd ~/asuswrt-merlin.ng/release/src-rt-5.02hnd && make rt-ac86u
 ```
 
-固件在 `release/src-rt-5.02hnd/image/`，选以 `_ubi.w` 结尾的文件。不要用文件名带 `cferom` 或 `pureubi` 的镜像。
+固件是 `release/src-rt-5.02hnd/targets/94908HND/RT-AC86U_386.14_2_ubi.w`。不要用文件名带 `cferom` 或 `pureubi` 的镜像。
 
 ## 刷机前检查
 
