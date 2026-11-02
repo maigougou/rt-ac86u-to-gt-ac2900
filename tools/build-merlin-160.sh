@@ -21,9 +21,11 @@ setup() {
 	dpkg --add-architecture i386
 	apt-get update
 	# The wiki's list, minus the GUI tools gconf-editor and gitk. On focal its
-	# "python" is provided by python2 plus python-is-python2.
-	DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-		ca-certificates sudo rsync python3-venv python3-pip python2 python-is-python2 \
+	# "python" is provided by python2 plus python-is-python2. The first line adds
+	# what a full Ubuntu install has but the container image lacks.
+	DEBIAN_FRONTEND=noninteractive apt-get install -y \
+		ca-certificates sudo rsync xxd bc cpio wget curl kmod lzma dos2unix net-tools lsb-release \
+		python3-venv python3-pip python2 python-is-python2 \
 		libtool-bin cmake libproxy-dev uuid-dev liblzo2-dev autoconf autoconf-archive automake bash bison \
 		bzip2 diffutils file flex m4 g++ gawk groff-base libncurses5-dev libtool libslang2 make patch perl \
 		pkg-config shtool subversion tar texinfo zlib1g zlib1g-dev git gettext libexpat1-dev libssl-dev cvs \
