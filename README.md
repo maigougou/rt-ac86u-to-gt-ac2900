@@ -141,7 +141,7 @@ python3 -m unittest discover -s tests
 
 代码和文档以 [MIT 许可证](LICENSE) 发布。许可证不提供任何担保，刷机造成的损失由操作者自行承担。
 
-[160 MHz 测试版](https://github.com/maigougou/rt-ac86u-to-gt-ac2900/releases/tag/merlin-160-386.14_2-test1)是修改过的 Merlin 固件，含 GPL 等开源组件和华硕、博通的闭源组件，不适用 MIT 许可证，也不是 Merlin 或华硕的官方版本。编译所用的 Merlin 源码保存在[这个 fork](https://github.com/maigougou/asuswrt-merlin.ng/tree/386.14_2)。
+[160 MHz 测试版](https://github.com/maigougou/rt-ac86u-to-gt-ac2900/releases/tag/merlin-160-386.14_2-test1)是修改过的 Merlin 固件，含 GPL 等开源组件和华硕、博通的闭源组件，不适用 MIT 许可证，也不是 Merlin 或华硕的官方版本。带改动的 Merlin 源码见[这个分支](https://github.com/maigougou/asuswrt-merlin.ng/tree/386.14_2-160mhz)。
 
 ## 免责声明
 
