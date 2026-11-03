@@ -3,12 +3,20 @@ name: build-merlin-160
 # Takes hours, so it only runs when its own inputs change or on request.
 on:
   workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Publish the image as a pre-release with this tag. Empty only builds.
+        type: string
+        default: ""
   push:
     branches: [merlin-160]
     paths:
       - tools/merlin160.py
       - tools/build-merlin-160.sh
       - .github/workflows/build-merlin-160.yml
+
+permissions:
+  contents: read
 
 jobs:
   build:
@@ -27,7 +35,6 @@ jobs:
             bash /project/tools/build-merlin-160.sh /project /out
       - name: Upload report and log
         if: always()
-        # Log and report only. This repository does not distribute firmware.
         uses: actions/upload-artifact@v4
         with:
           name: merlin-160-report
@@ -35,3 +42,54 @@ jobs:
             out/report.txt
             out/build.log.gz
           retention-days: 30
+      # Firmware only leaves this job when a release was asked for.
+      - name: Hand the image to the release job
+        if: inputs.release_tag != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: merlin-160-image
+          path: out/*_ubi.w
+          if-no-files-found: error
+          retention-days: 1
+
+  # A separate job, so the third-party build never runs with a write token.
+  release:
+    needs: build
+    if: inputs.release_tag != ''
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - name: Publish pre-release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.release_tag }}
+        run: |
+          image=$(ls dist/*_ubi.w)
+          name=$(basename "$image")
+          sha=$(sha256sum "$image" | cut -d' ' -f1)
+          grep -q "INFO sha256: $sha" dist/report.txt
+          python3 tools/fwtool.py verify "$image" --expect RT-AC86U
+          (cd dist && sha256sum "$name" > SHA256SUMS)
+          {
+            cat .github/merlin-160-release-notes.md
+            echo
+            echo "## SHA-256"
+            echo
+            printf '```text\n%s  %s\n```\n\n' "$sha" "$name"
+            echo "## 编译记录"
+            echo
+            echo "提交 $GITHUB_SHA，[CI 运行记录]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID)。"
+            echo
+            printf '```text\n'
+            cat dist/report.txt
+            printf '```\n'
+          } > notes.md
+          gh release create "$TAG" "$image" dist/SHA256SUMS dist/report.txt dist/build.log.gz \
+            --target "$GITHUB_SHA" --prerelease \
+            --title "RT-AC86U Merlin 386.14_2 160 MHz 测试版（未上机）" --notes-file notes.md

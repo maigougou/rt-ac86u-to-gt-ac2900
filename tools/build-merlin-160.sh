@@ -1,8 +1,8 @@
 #!/bin/bash
 # Build RT-AC86U Merlin 386.14_2 with 160 MHz inside an Ubuntu 20.04 container
 # and check the result. Usage, as root: build-merlin-160.sh PROJECT_DIR OUT_DIR
-# Follows the Merlin build wiki. The firmware stays in the container on purpose:
-# OUT_DIR only receives the log and a report.
+# Follows the Merlin build wiki. OUT_DIR receives the log, a report and, only if
+# every check passed, the firmware.
 set -euo pipefail
 
 PROJECT=$1
@@ -104,6 +104,7 @@ PY
 	fi
 	rootfs=${dhd%/lib/modules/*}
 	python3 "$PROJECT/tools/merlin160.py" check-rootfs "$rootfs" 2>&1 | tee -a "$OUT/report.txt"
+	cp "$image" "$OUT/RT-AC86U_${MERLIN_TAG}_160mhz-untested_ubi.w"
 }
 
 case "${3:-all}" in

@@ -3,3 +3,4 @@ state/
 firmware/
 *.w
 __pycache__/
+out/
