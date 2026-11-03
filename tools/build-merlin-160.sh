@@ -86,8 +86,10 @@ check_image() {
 		python3 "$PROJECT/tools/fwtool.py" verify "$image" --expect RT-AC86U
 	} 2>&1 | tee -a "$OUT/report.txt"
 
+	# 0.8.9 is the last ubi_reader that runs on focal's Python 3.8.
 	python3 -m venv "$HOME/venv"
-	"$HOME/venv/bin/pip" install --quiet ubi_reader==0.8.16
+	"$HOME/venv/bin/pip" install --quiet --upgrade pip
+	"$HOME/venv/bin/pip" install --quiet ubi_reader==0.8.9
 	python3 -I - "$image" "$HOME/ubi.bin" <<'PY'
 import sys
 data = open(sys.argv[1], "rb").read()
@@ -96,6 +98,10 @@ PY
 	"$HOME/venv/bin/ubireader_extract_files" -k -o "$HOME/rootfs" "$HOME/ubi.bin" > /dev/null
 	local dhd rootfs
 	dhd=$(find "$HOME/rootfs" -path '*/lib/modules/4.1.27/extra/dhd.ko' | head -n 1)
+	if [ -z "$dhd" ]; then
+		echo "FAIL no dhd.ko in the image's rootfs" | tee -a "$OUT/report.txt"
+		return 1
+	fi
 	rootfs=${dhd%/lib/modules/*}
 	python3 "$PROJECT/tools/merlin160.py" check-rootfs "$rootfs" 2>&1 | tee -a "$OUT/report.txt"
 }
