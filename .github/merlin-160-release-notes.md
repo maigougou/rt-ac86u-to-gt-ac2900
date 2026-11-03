@@ -23,6 +23,6 @@
 
 固件含 GPL 等开源组件，以及华硕和博通的闭源组件，不适用本仓库代码的 MIT 许可证。编译使用的源码：
 
-- [Asuswrt-Merlin 386.14_2](https://github.com/RMerl/asuswrt-merlin.ng/tree/386.14_2)
+- Asuswrt-Merlin 386.14_2：[本项目保存的副本](https://github.com/maigougou/asuswrt-merlin.ng/tree/386.14_2)（[上游](https://github.com/RMerl/asuswrt-merlin.ng/tree/386.14_2)）
 - [工具链提交 d1af80e](https://github.com/RMerl/am-toolchains/tree/d1af80e6b6686a4edc680386c09a8361453dd5c1)
 - 本仓库的 `tools/merlin160.py` 和 `tools/build-merlin-160.sh`（提交见下方）
