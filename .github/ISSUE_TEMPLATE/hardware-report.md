@@ -24,6 +24,7 @@ labels: hardware-report
 - [ ] 恢复出厂
 - [ ] `post`
 - [ ] 刷回 RT 固件
+- [ ] 刷入 160 MHz 测试版（保持 RT 型号）
 
 ## 刷入方式
 
@@ -43,6 +44,12 @@ labels: hardware-report
 ```
 
 `/proc/mtd` 内容（`state/backup/proc_mtd.txt`）：
+
+```text
+
+```
+
+如果刷的是 160 MHz 测试版，`wl -i eth6 chanspecs -b 5 -w 160` 的输出，以及 `wl -i eth6 country` 的结果：
 
 ```text
 

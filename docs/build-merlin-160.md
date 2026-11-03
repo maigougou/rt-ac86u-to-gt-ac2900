@@ -1,6 +1,6 @@
 # 编译保持 RT-AC86U 型号的 160 MHz 固件
 
-这份教程编译的是 Asuswrt-Merlin 386.14_2，型号仍是 RT-AC86U，不需要刷成 GT-AC2900。本仓库不提供编译好的固件。
+这份教程针对 Asuswrt-Merlin 386.14_2，型号仍是 RT-AC86U，不需要刷成 GT-AC2900。可以自己编译，也可以下载 CI 编译的测试版。
 
 > **先读这段：** 这条路线**没有在真机上验证过**。编译成功只说明能生成镜像，不代表 160 MHz 能正常工作。刷机可能让路由器变砖，风险自负。
 
@@ -20,6 +20,12 @@ Merlin 源码里已经带有两个型号的 `dhd.o`，所以补丁只改两处�
 1. 用 GT 的 `dhd.o` 覆盖 RT 的，带入 160 MHz 表。
 2. 给 RT-AC86U 加上 `BW160M=y`，否则系统不会请求 160 MHz。
 
+## 下载测试版
+
+不想自己编译，可以从 [Release](https://github.com/maigougou/rt-ac86u-to-gt-ac2900/releases/tag/merlin-160-386.14_2-test1) 下载 `RT-AC86U_386.14_2_160mhz-untested_ubi.w`。它由 CI 按下面的 Docker 流程编译，并通过了同样的检查，检查结果附在 Release 页面。这不是 Merlin 或华硕的官方固件。
+
+下载后核对 Release 页面上的 SHA-256，再运行“刷机前检查”的第一条命令，然后跳到“刷入和验证”。
+
 ## 编译
 
 需要 x86_64 的 Ubuntu 20.04（Windows 上可用 WSL2），以及至少 50 GB 磁盘空间。
@@ -34,7 +40,7 @@ mkdir -p out
 docker run --rm -v "$PWD:/project:ro" -v "$PWD/out:/out" ubuntu:20.04 bash /project/tools/build-merlin-160.sh /project /out
 ```
 
-这种方式下固件留在容器里，脚本结束后会被删除。要留下固件，请用下面的手动方式。
+全部检查通过后，固件也会写到 `out/`，文件名是 `RT-AC86U_386.14_2_160mhz-untested_ubi.w`。
 
 **手动：** 先按 [Merlin 编译 Wiki](https://github.com/RMerl/asuswrt-merlin.ng/wiki/Compile-Firmware-from-source) 安装依赖和配置环境变量。
 
@@ -76,7 +82,7 @@ cd ~/asuswrt-merlin.ng/release/src-rt-5.02hnd && make rt-ac86u
 python3 tools/fwtool.py verify 你的固件_ubi.w --expect RT-AC86U
 ```
 
-确认驱动带有 160 MHz 表：
+手动编译的，再确认驱动带有 160 MHz 表：
 
 ```bash
 find ~/asuswrt-merlin.ng/release/src-rt-5.02hnd -name dhd.ko -exec python3 tools/merlin160.py check-dhd {} \;

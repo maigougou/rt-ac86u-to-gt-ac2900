@@ -31,7 +31,7 @@
 | `skip_crc` 跨型号刷入 | **未验证**，只确认了校验会放行 |
 | Merlin GT 镜像 | **未分析**，下载源对分析环境返回 403 |
 | 刷机后的 Wi-Fi、LED 和稳定性 | **未验证** |
-| 保持 RT 型号的 160 MHz 固件 | CI 已编译成功，镜像通过 12/12 项校验，rootfs 里的 `dhd.ko` 带 160 MHz 表；**未上机** |
+| 保持 RT 型号的 160 MHz 固件 | CI 已编译成功，镜像通过 12/12 项校验，rootfs 里的 `dhd.ko` 带 160 MHz 表，已发布[测试版](https://github.com/maigougou/rt-ac86u-to-gt-ac2900/releases/tag/merlin-160-386.14_2-test1)；**未上机** |
 
 ### 需要真机测试
 
@@ -87,7 +87,7 @@
 
 ## 官方固件
 
-本仓库不包含任何固件，请从华硕下载。
+官方固件请从华硕下载，本仓库不转发。
 
 | 固件 | 下载 | `.w` 文件的 SHA-256 |
 |---|---|---|
@@ -105,9 +105,9 @@
 
 ## 不改型号开启 160 MHz
 
-官方 RT 固件的 Wi-Fi 法规数据里没有 160 MHz 表，这才是 RT-AC86U 没有 160 MHz 选项的直接原因。可以保持 RT-AC86U 型号，自己编译一个带 160 MHz 表的 Merlin 386.14_2，这样 LED 和按键都不受影响。步骤和风险见 [编译教程](docs/build-merlin-160.md)。
+官方 RT 固件的 Wi-Fi 法规数据里没有 160 MHz 表，这才是 RT-AC86U 没有 160 MHz 选项的直接原因。可以保持 RT-AC86U 型号，刷一个带 160 MHz 表的 Merlin 386.14_2，这样 LED 和按键都不受影响。步骤和风险见 [教程](docs/build-merlin-160.md)。
 
-本仓库不提供编译好的固件，这条路线同样**没有真机验证**。
+可以自己编译，也可以下载 CI 编译的[测试版](https://github.com/maigougou/rt-ac86u-to-gt-ac2900/releases/tag/merlin-160-386.14_2-test1)。这个固件同样**没有真机验证**，只适合会用 CFE 救援模式恢复的人测试。
 
 ## 工具
 
@@ -141,7 +141,7 @@ python3 -m unittest discover -s tests
 
 代码和文档以 [MIT 许可证](LICENSE) 发布。许可证不提供任何担保，刷机造成的损失由操作者自行承担。
 
-本仓库不包含华硕固件，请从华硕官网下载。
+[160 MHz 测试版](https://github.com/maigougou/rt-ac86u-to-gt-ac2900/releases/tag/merlin-160-386.14_2-test1)是修改过的 Merlin 固件，含 GPL 等开源组件和华硕、博通的闭源组件，不适用 MIT 许可证，也不是 Merlin 或华硕的官方版本。
 
 ## 免责声明
 
